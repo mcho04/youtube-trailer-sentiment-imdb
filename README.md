@@ -53,7 +53,7 @@ This project examines whether audience sentiment toward movie trailers on YouTub
 
 To keep the repository organized and avoid merge conflicts, each team member works on their own branch.
 
-1. Create or switch to your personal branch.
+1. Switch to your personal branch.
 2. Make changes and commit your work to your branch.
 3. Push your branch to GitHub.
 4. Open a **Pull Request** to merge your changes into the `main` branch.
