@@ -27,7 +27,6 @@ This project examines whether audience sentiment toward movie trailers on YouTub
 **YouTube trailer sentiment dataset**  
 [https://www.kaggle.com/datasets/dineshvasired/movies-youtube-trailers-and-sentiment](https://www.kaggle.com/datasets/dineshvasired/movies-youtube-trailers-and-sentiment)
 
-
 ## Repository Structure
 
 ```
@@ -36,13 +35,16 @@ This project examines whether audience sentiment toward movie trailers on YouTub
 │   ├── raw/        raw datasets
 │   └── cleaned/    cleaned datasets
 │
+│── instruction
+│   ├── 3_Data Cleaning and Oracle.pdf
+│   
 ├── notebooks
 │   └── exploration.ipynb
 │
 ├── src
 │   ├── load_data.py
-│   ├── clean_data.py
-│   └── transform_features.py
+│   ├── filter_data.py
+│   └── standardize.py
 │
 └── README.md
 ```
