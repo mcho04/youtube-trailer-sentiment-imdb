@@ -2,6 +2,12 @@ import numpy as np
 import pandas as pd
 import re
 
+basics_path = 'data/raw/title.basics.tsv'
+ratings_path = 'data/raw/title.ratings.tsv'
+movie_sentiments_path = 'data/raw/movies_youtube_sentiments.csv'
+
+
+
 ## FUNCTIONS
 
 # normalizes movie titles (convert to lowercase, remove punctuation, trim extra whitespaces)
@@ -16,13 +22,13 @@ def normalize_title(title):
 ## DATA LOADING & CLEANING
 
 # load datasets
-basics = pd.read_csv('title.basics.tsv', sep='\t', na_values="\\N", low_memory=False)
-ratings = pd.read_csv('title.ratings.tsv', sep='\t')
-movie_sentiments = pd.read_csv('movies_youtube_sentiments 2.csv')
+basics = pd.read_csv(basics_path, sep='\t', na_values="\\N", low_memory=False)
+ratings = pd.read_csv(ratings_path, sep='\t')
+movie_sentiments = pd.read_csv(movie_sentiments_path)
 
 print("Size of basics data", basics.shape) # (12246013, 9)
 print("Size of ratings data", ratings.shape) # (1629185, 3)
-print("Size of movie sentiments data", movie_sentiments.shape) (1105, 18)
+print("Size of movie sentiments data", movie_sentiments.shape) #(1105, 18)
 
 # check data types of variables
 print("Data types of Basics datasets:", basics.dtypes)
@@ -54,7 +60,6 @@ basics['primaryTitle_norm'] = basics['primaryTitle'].apply(normalize_title)
 # keep variables of interest
 basics = basics[
     ["tconst",
-     "titleType",
      "primaryTitle_norm",
      "primaryTitle",
      "startYear"]
@@ -97,10 +102,10 @@ movie_sentiments = movie_sentiments[
 ]
 
 ## EXPORT CLEANED DATASET
-basics.to_csv("basics_cleaned.csv", index=False)
+basics.to_csv("data/cleaned/basics_cleaned.csv", index=False)
 
 # Export IMDb ratings
-ratings.to_csv("ratings_cleaned.csv", index=False)
+ratings.to_csv("data/cleaned/ratings_cleaned.csv", index=False)
 
 # Export Kaggle YouTube movie data
-movie_sentiments.to_csv("movie_sentiments_cleaned.csv", index=False)
+movie_sentiments.to_csv("data/cleaned/movie_sentiments_cleaned.csv", index=False)
