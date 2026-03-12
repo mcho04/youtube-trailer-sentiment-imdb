@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 import re
 
-basics_path = 'data/raw/title.basics.tsv'
-ratings_path = 'data/raw/title.ratings.tsv'
-movie_sentiments_path = 'data/raw/movies_youtube_sentiments.csv'
+basics_path = 'youtube-trailer-sentiment-imdb/data/raw/title.basics.tsv'
+ratings_path = 'youtube-trailer-sentiment-imdb/data/raw/title.ratings.tsv'
+movie_sentiments_path = 'youtube-trailer-sentiment-imdb/data/raw/movies_youtube_sentiments.csv'
 
 ## FUNCTIONS
 
