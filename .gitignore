@@ -10,4 +10,4 @@ data/cleaned/*
 *.csv
 *.tsv
 *.gz
-*.parquet
+*.parquetsql/insert_data.sql
