@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 import re
 
-basics_path = 'data/raw/title.basics.tsv'
-ratings_path = 'data/raw/title.ratings.tsv'
-movie_sentiments_path = 'data/raw/movies_youtube_sentiments.csv'
+basics_path = 'youtube-trailer-sentiment-imdb/data/raw/title.basics.tsv'
+ratings_path = 'youtube-trailer-sentiment-imdb/data/raw/title.ratings.tsv'
+movie_sentiments_path = 'youtube-trailer-sentiment-imdb/data/raw/movies_youtube_sentiments.csv'
 
 
 
@@ -106,10 +106,10 @@ movie_sentiments = movie_sentiments[
 ]
 
 ## EXPORT CLEANED DATASET
-basics.to_csv("data/cleaned/basics_cleaned.csv", index=False)
+basics.to_csv("youtube-trailer-sentiment-imdb/data/cleaned/basics_cleaned.csv", index=False)
 
 # Export IMDb ratings
-ratings.to_csv("data/cleaned/ratings_cleaned.csv", index=False)
+ratings.to_csv("youtube-trailer-sentiment-imdb/data/cleaned/ratings_cleaned.csv", index=False)
 
 # Export Kaggle YouTube movie data
-movie_sentiments.to_csv("data/cleaned/movie_sentiments_cleaned.csv", index=False)
+movie_sentiments.to_csv("youtube-trailer-sentiment-imdb/data/cleaned/movie_sentiments_cleaned.csv", index=False)
