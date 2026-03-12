@@ -86,6 +86,10 @@ print("Size of movie sentiments data with only movies with a rating", movie_sent
 # normalize titles in kaggle dataset
 movie_sentiments['name_norm'] = movie_sentiments['name'].apply(normalize_title)
 
+# remove duplicate video_id entries, keeping the first occurrence
+movie_sentiments = movie_sentiments.drop_duplicates(subset='video_id', keep='first')
+movie_sentiments = movie_sentiments.reset_index(drop=True)
+
 # keep variables of interest
 movie_sentiments = movie_sentiments[
         [
