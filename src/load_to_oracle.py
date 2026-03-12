@@ -1,10 +1,4 @@
-from typing import Any
-
-
 import os
-import pandas as pd
-import oracledb
-
 import pandas as pd
 import oracledb
 
@@ -15,10 +9,17 @@ SENTIMENTS_CSV = "data/cleaned/movie_sentiments_cleaned.csv"
 # Connect to Oracle database
 def get_connection():
     return oracledb.connect(
-        user="YOUR_USERNAME",
-        password="YOUR_PASSWORD",
-        dsn="YOUR_DSN"
+        user=os.getenv("UBC_ORACLE_USER"),
+        password=os.getenv("UBC_ORACLE_PASSWORD"),
+        dsn=os.getenv("UBC_ORACLE_DSN")
     )
+
+# NOTE: Make sure to set up the environment variables before running the script.
+# To set up the environment variables, run the following commands:
+# export UBC_ORACLE_USER="your_username"
+# export UBC_ORACLE_PASSWORD="your_password"
+# export UBC_ORACLE_DSN="your_dsn"
+
 
 # Drop tables if they exist
 def drop_tables(cursor):
@@ -46,9 +47,7 @@ def create_tables(cursor):
         CREATE TABLE ratings (
             tconst VARCHAR2(20),
             averageRating NUMBER,
-            numVotes NUMBER,
-            CONSTRAINT fk_ratings_basics
-                FOREIGN KEY (tconst) REFERENCES basics(tconst)
+            numVotes NUMBER
         )
     """)
 
@@ -71,8 +70,7 @@ def create_tables(cursor):
 
 # Load basics table into Oracle database
 def load_basics(cursor, basics_df):
-    rows = list[Any](basics_df.itertuples(index=False, name=None))
-
+    rows = list(basics_df.itertuples(index=False, name=None))
     cursor.executemany("""
         INSERT INTO basics (tconst, primaryTitle_norm, primaryTitle, startYear)
         VALUES (:1, :2, :3, :4)

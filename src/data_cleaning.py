@@ -28,11 +28,11 @@ def load_data():
 
 # BASICS DATASET
 def clean_basics(basics): # initial size: (12246013, 9)
-    basics = basics[basics['titleType'] == 'movie'].copy() # keep only movie titles in basics # size: (738446, 9)
+    basics = basics[basics['titleType'] == 'movie'].copy() # keep only movie titles in basics 
     basics['startYear'] = basics['startYear'].astype('Int64') # convert startYear and endYear to integer
     basics['endYear'] = basics['endYear'].astype('Int64') # convert startYear and endYear to integer
-    basics = basics[(basics['startYear'] >= 2005) & (basics['startYear'] <= 2019)].copy() # keep only movies released between 2005 and 2019 # size: (217972, 9)
-    basics = basics.dropna(subset=['primaryTitle']).copy() # ran basics.info() to check for nulls, and remove them # size: (217970, 9)
+    basics = basics[(basics['startYear'] >= 2005) & (basics['startYear'] <= 2019)].copy() # keep only movies released between 2005 and 2019
+    basics = basics.dropna(subset=['primaryTitle']).copy() # ran basics.info() to check for nulls, and remove them
     basics['primaryTitle_norm'] = basics['primaryTitle'].apply(normalize_title)
 
     return basics[["tconst","primaryTitle_norm","primaryTitle","startYear"]]
@@ -41,12 +41,12 @@ def clean_basics(basics): # initial size: (12246013, 9)
 # RATINGS DATASET
 
 def clean_ratings(ratings):
-    return ratings[["tconst","averageRating","numVotes"]] # keep variables of interest # (1629185, 3)
+    return ratings[["tconst","averageRating","numVotes"]] # keep variables of interest
 
 # MOVIE SENTIMENTS DATASET
 
-def clean_sentiments(movie_sentiments): # initial size: (1105, 18)
-    movie_sentiments = movie_sentiments.dropna(subset=['rating']).copy() # (1104, 18)
+def clean_sentiments(movie_sentiments): 
+    movie_sentiments = movie_sentiments.dropna(subset=['rating']).copy()
     movie_sentiments['name_norm'] = movie_sentiments['name'].apply(normalize_title)
 
     # Convert sentiment_scores string → dictionary
@@ -73,18 +73,17 @@ def main():
     basics, ratings, movie_sentiments = load_data()
     print("Data loaded")
 
-    basics = clean_basics(basics)
-    print("Basics cleaned:", basics.shape)
+    basics = clean_basics(basics) # initial size: (12347297, 9)
+    print("Basics cleaned:", basics.shape) # cleaned size: (217753, 4)
 
-    ratings = clean_ratings(ratings)
-    print("Ratings cleaned:", ratings.shape)
+    ratings = clean_ratings(ratings) # initial size: (1646044, 3)
+    print("Ratings cleaned:", ratings.shape) # cleaned size: (1646044, 3)
 
-    movie_sentiments = clean_sentiments(movie_sentiments)
-    print("Sentiments cleaned:", movie_sentiments.shape)
+    movie_sentiments = clean_sentiments(movie_sentiments) # initial size: (1105, 18)
+    print("Sentiments cleaned:", movie_sentiments.shape) # cleaned size: (1104, 11)
 
     export_cleaned_data(basics, ratings, movie_sentiments)
     print("Cleaned files exported")    
-
 
 if __name__ == "__main__":
     main()
