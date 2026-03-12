@@ -1,10 +1,10 @@
-import numpy as np
 import pandas as pd
 import re
+import ast
 
-basics_path = 'youtube-trailer-sentiment-imdb/data/raw/title.basics.tsv'
-ratings_path = 'youtube-trailer-sentiment-imdb/data/raw/title.ratings.tsv'
-movie_sentiments_path = 'youtube-trailer-sentiment-imdb/data/raw/movies_youtube_sentiments.csv'
+basics_path = 'data/raw/title.basics.tsv'
+ratings_path = 'data/raw/title.ratings.tsv'
+movie_sentiments_path = 'data/raw/movies_youtube_sentiments.csv'
 
 ## FUNCTIONS
 
@@ -23,15 +23,6 @@ def load_data():
     ratings = pd.read_csv(ratings_path, sep='\t')
     movie_sentiments = pd.read_csv(movie_sentiments_path)
     return basics, ratings, movie_sentiments
-
-# print("Size of basics data", basics.shape) # (12246013, 9)
-# print("Size of ratings data", ratings.shape) # (1629185, 3)
-# print("Size of movie sentiments data", movie_sentiments.shape) #(1105, 18)
-
-# check data types of variables
-# print("Data types of Basics datasets:", basics.dtypes)
-# print("Data types of ratings datasets:", ratings.dtypes)
-
 
 ## DATA CLEANING
 
@@ -58,8 +49,17 @@ def clean_sentiments(movie_sentiments): # initial size: (1105, 18)
     movie_sentiments = movie_sentiments.dropna(subset=['rating']).copy() # (1104, 18)
     movie_sentiments['name_norm'] = movie_sentiments['name'].apply(normalize_title)
 
+    # Convert sentiment_scores string → dictionary
+    sentiment_dict = movie_sentiments['sentiment_scores'].apply(ast.literal_eval)
+
+    # Create new columns
+    movie_sentiments['positive'] = sentiment_dict.apply(lambda x: x['positive'])
+    movie_sentiments['neutral'] = sentiment_dict.apply(lambda x: x['neutral'])
+    movie_sentiments['negative'] = sentiment_dict.apply(lambda x: x['negative'])
+
     return movie_sentiments[
-        ["name_norm","trailer_link","video_id","sentiment_scores",
+        ["name_norm","trailer_link","video_id",
+         "positive","neutral","negative",
          "favorability","rating","genre","year","votes"]
     ]
 
