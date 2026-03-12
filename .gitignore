@@ -10,6 +10,12 @@ data/cleaned/*
 *.csv
 *.tsv
 *.gz
+
+# Ignore generated SQL inserts
+sql/insert_data.sql
+
+# Allow empty placeholder
+!sql/insert_data.sql
 *.parquetsql/insert_data.sql
 
 
