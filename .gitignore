@@ -11,3 +11,7 @@ data/cleaned/*
 *.tsv
 *.gz
 *.parquetsql/insert_data.sql
+
+
+# Ignore Jupyter notebook checkpoints
+**/.ipynb_checkpoints/
