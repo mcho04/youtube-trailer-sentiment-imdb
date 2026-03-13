@@ -1,14 +1,11 @@
 -- .headers on
 -- .mode column
 
--- SELECT * FROM movies
--- LIMIT 5;
+SELECT COUNT(*) FROM movies;
 
--- SELECT * FROM ratings
--- LIMIT 5;
+SELECT COUNT(*) FROM ratings;
 
--- SELECT * FROM movie_sentiments
--- LIMIT 5;
+SELECT COUNT(*) FROM movie_sentiments;
 
 -- SELECT ms.genre, ms.favorability, r.averageRating
 -- FROM movies m 
