@@ -13,6 +13,7 @@ data/cleaned/*
 
 # Ignore generated SQL inserts
 sql/insert_data.sql
+movies.db
 
 # Allow empty placeholder
 !sql/insert_data.sql
