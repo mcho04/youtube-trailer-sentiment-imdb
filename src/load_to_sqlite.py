@@ -75,7 +75,7 @@ def load_sentiments(cursor, df):
     deduped_df = df.drop_duplicates(subset=["video_id"]).copy()
     dropped_rows = len(df) - len(deduped_df)
     if dropped_rows:
-        print(f"Dropped {dropped_rows} duplicate movie_sentiments rows by video_id.")
+        print(f"Dropped {dropped_rows} duplicate movie_sentiments rows by video_id.") # dropped duplicate video_ids
 
     rows = list(
         deduped_df[
