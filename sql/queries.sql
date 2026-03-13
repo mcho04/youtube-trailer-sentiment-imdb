@@ -1,31 +1,44 @@
-.headers on
-.mode column
+-- .headers on
+-- .mode column
 
-SELECT COUNT(*) AS movie_count FROM movies;
+-- SELECT * FROM movies
+-- LIMIT 5;
 
-SELECT COUNT(*) AS ratings_count FROM ratings;
+-- SELECT * FROM ratings
+-- LIMIT 5;
 
-SELECT COUNT(*) AS sentiment_count FROM movie_sentiments;
+-- SELECT * FROM movie_sentiments
+-- LIMIT 5;
 
-SELECT *
-FROM movies
-LIMIT 10;
+-- SELECT ms.genre, ms.favorability, r.averageRating
+-- FROM movies m 
+-- JOIN ratings r ON m.tconst = r.tconst
+-- JOIN movie_sentiments ms ON m.primaryTitle_norm = ms.name_norm
+-- WHERE ms.genre IN ('Action', 'Comedy');
 
-SELECT *
-FROM ratings
-LIMIT 10;
+-- SELECT 
+--     CASE 
+--         WHEN r.averageRating >= 7 THEN 'High'
+--         WHEN r.averageRating <= 4 THEN 'Low'
+--     END AS rating_group,
+--     ms.favorability,
+--     r.averageRating
+-- FROM basics b
+-- JOIN ratings r ON b.tconst = r.tconst
+-- JOIN movie_sentiments ms ON b.primaryTitle_norm = ms.name_norm
+-- WHERE r.averageRating >= 7 OR r.averageRating <= 4
+-- ORDER BY rating_group
 
-SELECT *
-FROM movie_sentiments
-LIMIT 10;
-
-SELECT m.primaryTitle, m.startYear, r.averageRating, r.numVotes
-FROM movies AS m
-JOIN ratings AS r
-    ON m.tconst = r.tconst
-LIMIT 10;
-
-SELECT genre, AVG(favorability) AS avg_favorability
-FROM movie_sentiments
-GROUP BY genre
-ORDER BY avg_favorability DESC;
+-- SELECT 
+--     ms.rating,
+--     CASE 
+--         WHEN ms.rating = 'R' THEN 'R-Rated'
+--         ELSE 'Non R-Rated'
+--     END AS rating_group,
+--     r.averageRating,
+--     ms.favorability
+-- FROM basics b
+-- JOIN ratings r ON b.tconst = r.tconst
+-- JOIN movie_sentiments ms ON b.primaryTitle_norm = ms.name_norm
+-- WHERE ms.rating IN ('R', 'PG', 'PG-13', 'G')
+-- ORDER BY rating_group, r.averageRating
