@@ -10,11 +10,11 @@
 -- SELECT * FROM movie_sentiments
 -- LIMIT 5;
 
-SELECT ms.genre, ms.favorability, r.averageRating
-FROM movies m 
-JOIN ratings r ON m.tconst = r.tconst
-JOIN movie_sentiments ms ON m.primaryTitle_norm = ms.name_norm
-WHERE ms.genre IN ('Action', 'Comedy');
+-- SELECT ms.genre, ms.favorability, r.averageRating
+-- FROM movies m 
+-- JOIN ratings r ON m.tconst = r.tconst
+-- JOIN movie_sentiments ms ON m.primaryTitle_norm = ms.name_norm
+-- WHERE ms.genre IN ('Action', 'Comedy');
 
 -- SELECT 
 --     CASE 
