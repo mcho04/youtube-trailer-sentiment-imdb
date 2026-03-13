@@ -1,10 +1,13 @@
-from data_cleaning import basics, ratings, movie_sentiments
-
 import numpy as np
 import pandas as pd
 import re
 
 import pandas as pd
+
+basics = pd.read_csv("data/cleaned/basics_cleaned.csv")
+ratings = pd.read_csv("data/cleaned/ratings_cleaned.csv")
+movie_sentiments = pd.read_csv("data/cleaned/movie_sentiments_cleaned.csv")
+
 
 def generate_inserts(df, table_name, columns, output_file):
     with open(output_file, "a") as f:  # append mode
