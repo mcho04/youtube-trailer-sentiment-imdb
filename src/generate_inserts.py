@@ -51,7 +51,7 @@ generate_inserts(
 generate_inserts(
     movie_sentiments,
     "movie_sentiments",
-    ["name_norm", "trailer_link", "video_id", "sentiment_scores", 
+    ["name_norm", "trailer_link", "video_id", "positive", "neutral", "negative",
     "favorability", "rating", "genre", "year", "votes"],
     "sql/insert_data.sql"
 )
