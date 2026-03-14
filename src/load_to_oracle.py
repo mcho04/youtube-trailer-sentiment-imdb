@@ -26,7 +26,7 @@ ORACLE_PASSWORD = os.getenv("ORACLE_PASSWORD")
 ORACLE_DSN = "localhost:1522/stu"
 
 # =========================
-# HELPER FUNCTIONS
+# BASIC HELPER FUNCTIONS
 # =========================
 def drop_table(cursor, table_name):
     """
@@ -43,6 +43,18 @@ def drop_table(cursor, table_name):
         else:
             raise
 
+def clean_null(value):
+    """
+    Convert pandas NaN to Python None for Oracle inserts.
+    """
+    if pd.isna(value):
+        return None
+    return value
+
+# ======================================================
+# Drop existing tables and recreate the database schema
+# for MOVIES, RATINGS, and MOVIE_SENTIMENTS.
+# ======================================================
 def create_tables(cursor):
     drop_table(cursor, "MOVIE_SENTIMENTS")
     drop_table(cursor, "RATINGS")
@@ -80,18 +92,9 @@ def create_tables(cursor):
 
     print("Tables created successfully")
 
-def clean_null(value):
-    """
-    Convert pandas NaN to Python None for Oracle inserts.
-    """
-    if pd.isna(value):
-        return None
-    return value
-
 # =========================
 # LOAD FUNCTIONS
 # =========================
-
 def load_movies(cursor, df):
     rows = [
         (
