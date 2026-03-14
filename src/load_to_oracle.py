@@ -19,10 +19,7 @@ SENTIMENTS_CSV = Path("data/cleaned/movie_sentiments_cleaned.csv")
 
 # =========================
 # ORACLE CONNECTION INFO
-# Type your own credentials in terminal
-# Example: 
-# export ORACLE_USER = YOUR_USERNAME
-# export ORACLE_PASSWORD = YOUR PASSWORD
+# Type your own credentials in .env file
 # =========================
 ORACLE_USER = os.getenv("ORACLE_USER")
 ORACLE_PASSWORD = os.getenv("ORACLE_PASSWORD")
