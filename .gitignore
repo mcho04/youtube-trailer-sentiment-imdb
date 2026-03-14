@@ -1,24 +1,12 @@
 # Ignore datasets
 data/raw/*
-data/cleaned/*
 
 # Allow placeholder files
 !data/raw/.gitkeep
-!data/cleaned/.gitkeep
+!data/database/.gitkeep
 
-# Ignore common data formats
-*.csv
-*.tsv
-*.gz
-
-# Ignore generated SQL inserts
-sql/insert_data.sql
-movies.db
-
-# Allow empty placeholder
-!sql/insert_data.sql
-*.parquetsql/insert_data.sql
-
+# Ignore SQLite database
+data/database/movies.db
 
 # Ignore Jupyter notebook checkpoints
 **/.ipynb_checkpoints/

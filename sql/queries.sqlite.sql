@@ -1,4 +1,8 @@
 -- Observing tables
+-- SELECT COUNT(*) FROM movies;
+-- SELECT COUNT(*) FROM ratings;
+-- SELECT COUNT(*) FROM movie_sentiments;
+
 SELECT * FROM movies LIMIT 1;
 SELECT * FROM ratings LIMIT 1;
 SELECT * FROM movie_sentiments LIMIT 1;
