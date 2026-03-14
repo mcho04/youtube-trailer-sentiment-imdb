@@ -2,6 +2,13 @@ from pathlib import Path
 import pandas as pd
 import oracledb
 import os
+from dotenv import load_dotenv
+
+# =========================
+# LOAD ENVIRONMENT VARIABLES
+# =========================
+from dotenv import load_dotenv
+load_dotenv()
 
 # =========================
 # FILE PATHS
@@ -12,16 +19,14 @@ SENTIMENTS_CSV = Path("data/cleaned/movie_sentiments_cleaned.csv")
 
 # =========================
 # ORACLE CONNECTION INFO
-# Replace these with your own credentials
+# Type your own credentials in .env file
 # =========================
 ORACLE_USER = os.getenv("ORACLE_USER")
 ORACLE_PASSWORD = os.getenv("ORACLE_PASSWORD")
 ORACLE_DSN = "localhost:1522/stu"
-# Example DSN if using UBC SSH tunnel:
-# "localhost:1522/stu"
 
 # =========================
-# HELPERS
+# HELPER FUNCTIONS
 # =========================
 def drop_table(cursor, table_name):
     """
@@ -39,7 +44,6 @@ def drop_table(cursor, table_name):
             raise
 
 def create_tables(cursor):
-    # Drop in child-to-parent order
     drop_table(cursor, "MOVIE_SENTIMENTS")
     drop_table(cursor, "RATINGS")
     drop_table(cursor, "MOVIES")
@@ -84,6 +88,10 @@ def clean_null(value):
         return None
     return value
 
+# =========================
+# LOAD FUNCTIONS
+# =========================
+
 def load_movies(cursor, df):
     rows = [
         (
@@ -95,6 +103,7 @@ def load_movies(cursor, df):
         for _, row in df.iterrows()
     ]
 
+    # executemany is used for efficiency when inserting many rows.
     cursor.executemany("""
         INSERT INTO MOVIES (TCONST, PRIMARYTITLE_NORM, PRIMARYTITLE, STARTYEAR)
         VALUES (:1, :2, :3, :4)
@@ -146,6 +155,10 @@ def load_sentiments(cursor, df):
 
     print(f"Inserted {len(rows)} rows into MOVIE_SENTIMENTS")
 
+
+# =========================
+# RUN THE FULL ORACLE LOADING PIPELINE
+# =========================
 def main():
     basics_df = pd.read_csv(BASICS_CSV)
     ratings_df = pd.read_csv(RATINGS_CSV)
