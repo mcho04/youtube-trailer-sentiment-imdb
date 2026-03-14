@@ -48,15 +48,15 @@ def clean_ratings(ratings):
 def clean_sentiments(movie_sentiments): 
     movie_sentiments = movie_sentiments.dropna(subset=['rating']).copy()
     movie_sentiments['name_norm'] = movie_sentiments['name'].apply(normalize_title)
-
     # Convert sentiment_scores string → dictionary
     sentiment_dict = movie_sentiments['sentiment_scores'].apply(ast.literal_eval)
-
     # Create new columns
     movie_sentiments['positive'] = sentiment_dict.apply(lambda x: x['positive'])
     movie_sentiments['neutral'] = sentiment_dict.apply(lambda x: x['neutral'])
     movie_sentiments['negative'] = sentiment_dict.apply(lambda x: x['negative'])
-
+    
+    movie_sentiments = movie_sentiments.drop_duplicates(subset=['video_id'], keep='first')  # keep first occurrence of each video_id
+    
     return movie_sentiments[
         ["name_norm","trailer_link","video_id",
          "positive","neutral","negative",
