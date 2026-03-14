@@ -1,14 +1,28 @@
--- Observing tables
+-- =====================================================
+-- BASIC TABLE CHECKS
+-- Verify that the datasets were loaded correctly by
+-- checking the number of rows in each table.
+-- =====================================================
 SELECT COUNT(*) FROM movies;
 SELECT COUNT(*) FROM ratings;
 SELECT COUNT(*) FROM movie_sentiments;
 
+-- =====================================================
+-- GENRE ANALYSIS
+-- Join the three datasets and observe the relationship
+-- between trailer sentiment (favorability) and IMDb
+-- ratings for selected genres (Action and Comedy).
+-- =====================================================
 SELECT ms.genre, ms.favorability, r.averageRating
 FROM movies m 
 JOIN ratings r ON m.tconst = r.tconst
 JOIN movie_sentiments ms ON m.primaryTitle_norm = ms.name_norm
 WHERE ms.genre IN ('Action', 'Comedy');
 
+-- =====================================================
+-- HIGH VS LOW RATED MOVIES
+-- Categorize movies into "High" and "Low" rating groups based on IMDb averageRating 
+-- =====================================================
 SELECT 
     CASE 
         WHEN r.averageRating >= 7 THEN 'High'
@@ -22,6 +36,9 @@ JOIN movie_sentiments ms ON m.primaryTitle_norm = ms.name_norm
 WHERE r.averageRating >= 7 OR r.averageRating <= 4
 ORDER BY rating_group;
 
+-- =====================================================
+-- Compare R-rated movies and non-R-rated movies.
+-- =====================================================
 SELECT 
     ms.rating,
     CASE 
