@@ -14,35 +14,34 @@ def create_tables(cursor):
     cursor.execute("""
     CREATE TABLE movies (
         tconst TEXT PRIMARY KEY,
-        primaryTitle_norm TEXT,
-        primaryTitle TEXT,
-        startYear INTEGER
+        primaryTitle_norm TEXT NOT NULL,
+        primaryTitle TEXT NOT NULL,
     )
     """)
     cursor.execute("""
     CREATE TABLE ratings (
-        tconst TEXT,
+        tconst PRIMARY KEY REFERENCES movies(tconst),
         averageRating REAL,
-        numVotes INTEGER
+        numVotes INTEGER          
     )
     """)
     cursor.execute("""
     CREATE TABLE movie_sentiments (
         trailer_id TEXT PRIMARY KEY,
-        name_norm TEXT,
-        favorability REAL,
-        rating TEXT,
-        genre TEXT,
+        name_norm TEXT NOT NULL,
+        favorability REAL NOT NULL,
+        rating TEXT NOT NULL,
+        genre TEXT NOT NULL,
         year INTEGER
     )
     """)
 
 def load_movies(cursor, df):
-    rows = list(df[["tconst", "primaryTitle_norm", "primaryTitle", "startYear"]].itertuples(index=False, name=None))
+    rows = list(df[["tconst", "primaryTitle_norm", "primaryTitle"]].itertuples(index=False, name=None))
     cursor.executemany(
         """
-        INSERT INTO movies (tconst, primaryTitle_norm, primaryTitle, startYear)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO movies (tconst, primaryTitle_norm, primaryTitle)
+        VALUES (?, ?, ?)
         """,
         rows,
     )
