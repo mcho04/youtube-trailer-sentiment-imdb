@@ -4,7 +4,7 @@ from pathlib import Path
 import pandas as pd
 
 
-DB_PATH = Path("movies.db")
+DB_PATH = Path("data/database/movies.db")
 BASICS_CSV = Path("data/cleaned/basics_cleaned.csv")
 RATINGS_CSV = Path("data/cleaned/ratings_cleaned.csv")
 SENTIMENTS_CSV = Path("data/cleaned/movie_sentiments_cleaned.csv")
@@ -34,17 +34,12 @@ def create_tables(cursor):
 
     cursor.execute("""
     CREATE TABLE movie_sentiments (
+        trailer_id INTEGER PRIMARY KEY,
         name_norm TEXT,
-        trailer_link TEXT,
-        video_id TEXT PRIMARY KEY,
-        positive REAL,
-        neutral REAL,
-        negative REAL,
         favorability REAL,
-        rating REAL,
+        rating TEXT,
         genre TEXT,
-        year INTEGER,
-        votes INTEGER
+        year INTEGER
     )
     """)
 
@@ -72,35 +67,31 @@ def load_ratings(cursor, df):
 
 
 def load_sentiments(cursor, df):
-    deduped_df = df.drop_duplicates(subset=["video_id"]).copy()
+    deduped_df = df.drop_duplicates(subset=["trailer_id"]).copy()
     dropped_rows = len(df) - len(deduped_df)
+
     if dropped_rows:
-        print(f"Dropped {dropped_rows} duplicate movie_sentiments rows by video_id.") # dropped duplicate video_ids
+        print(f"Dropped {dropped_rows} duplicate movie_sentiments rows by trailer_id.")
 
     rows = list(
         deduped_df[
             [
+                "trailer_id",
                 "name_norm",
-                "trailer_link",
-                "video_id",
-                "positive",
-                "neutral",
-                "negative",
                 "favorability",
                 "rating",
                 "genre",
                 "year",
-                "votes",
             ]
         ].itertuples(index=False, name=None)
     )
+
     cursor.executemany(
         """
         INSERT INTO movie_sentiments (
-            name_norm, trailer_link, video_id, positive, neutral, negative,
-            favorability, rating, genre, year, votes
+            trailer_id, name_norm, favorability, rating, genre, year
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?)
         """,
         rows,
     )
@@ -121,6 +112,7 @@ def main():
         load_sentiments(cursor, sentiments_df)
         conn.commit()
         print("Loaded cleaned data into movies.db")
+        print(basics_df.shape)
     except Exception:
         conn.rollback()
         raise

@@ -3,10 +3,10 @@ data/raw/*
 
 # Allow placeholder files
 !data/raw/.gitkeep
+!data/database/.gitkeep
 
-# Ignore generated SQL inserts
-sql/insert_data.sql
-movies.db
+# Ignore SQLite database
+data/database/movies.db
 
 # Ignore Jupyter notebook checkpoints
 **/.ipynb_checkpoints/
