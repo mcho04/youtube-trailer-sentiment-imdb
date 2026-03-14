@@ -2,11 +2,12 @@ import sqlite3
 from pathlib import Path
 import pandas as pd
 
-DB_PATH = Path("data/database/movies.db")
+DB_PATH = Path("data/database/movies.db") 
 BASICS_CSV = Path("data/cleaned/basics_cleaned.csv")
 RATINGS_CSV = Path("data/cleaned/ratings_cleaned.csv")
 SENTIMENTS_CSV = Path("data/cleaned/movie_sentiments_cleaned.csv")
 
+# Delete if table movies, ratings, and movie_sentiments exist
 def create_tables(cursor):
     cursor.execute("DROP TABLE IF EXISTS movie_sentiments")
     cursor.execute("DROP TABLE IF EXISTS ratings")
@@ -23,7 +24,8 @@ def create_tables(cursor):
     CREATE TABLE ratings (
         tconst TEXT,
         averageRating REAL,
-        numVotes INTEGER
+        numVotes INTEGER,
+        FOREIGN KEY (tconst) REFERENCES movies(tconst)
     )
     """)
     cursor.execute("""

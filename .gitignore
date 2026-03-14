@@ -10,3 +10,6 @@ data/database/movies.db
 
 # Ignore Jupyter notebook checkpoints
 **/.ipynb_checkpoints/
+
+# ignore .env
+.env
