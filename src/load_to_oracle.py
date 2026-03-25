@@ -132,12 +132,18 @@ def load_ratings(cursor, df):
     print(f"Inserted {len(rows)} rows into RATINGS")
 
 def load_sentiments(cursor, df):
-    deduped_df = df.drop_duplicates(subset=["trailer_id"]).copy()
-    dropped_rows = len(df) - len(deduped_df)
+    # 1. Clean and normalize
+    df["name_norm"] = df["name_norm"].str.strip().str.lower()
+    df = df.dropna(subset=["name_norm"])
 
-    if dropped_rows:
-        print(f"Dropped {dropped_rows} duplicate MOVIE_SENTIMENTS rows by trailer_id")
+    # 2. Drop duplicates in the memory
+    df = df.drop_duplicates(subset=["name_norm"], keep="first")
 
+    # This overwrites "data/cleaned/movie_sentiments_cleaned.csv"
+    df.to_csv(SENTIMENTS_CSV, index=False)
+    print(f"CSV file updated: {SENTIMENTS_CSV}")
+
+    # 4. Now proceed to insert into Oracle
     rows = [
         (
             clean_null(row["trailer_id"]),
@@ -147,7 +153,7 @@ def load_sentiments(cursor, df):
             clean_null(row["genre"]),
             clean_null(row["year"]),
         )
-        for _, row in deduped_df.iterrows()
+        for _, row in df.iterrows()
     ]
 
     cursor.executemany("""
@@ -155,9 +161,6 @@ def load_sentiments(cursor, df):
         (TRAILER_ID, NAME_NORM, FAVORABILITY, RATING, GENRE, YEAR)
         VALUES (:1, :2, :3, :4, :5, :6)
     """, rows)
-
-    print(f"Inserted {len(rows)} rows into MOVIE_SENTIMENTS")
-
 
 # =========================
 # RUN THE FULL ORACLE LOADING PIPELINE
