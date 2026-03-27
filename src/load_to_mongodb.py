@@ -34,8 +34,8 @@ basics_df = pd.read_csv("data/cleaned/basics_cleaned.csv")
 ratings_df = pd.read_csv("data/cleaned/ratings_cleaned.csv")
 trailers_df = pd.read_csv("data/cleaned/movie_sentiments_cleaned.csv")
 
-# remove duplicates temporarily (since movie_sentiments_cleaned still contains duplicates)
-# this should be removed in the later because our data should not contain duplicates
+# remove duplicate movie titles to match schema design 
+# duplicate movie titles in sentiment data are pulled from the same youtube video, hence only first occurrence kept
 trailers_df = trailers_df.drop_duplicates(subset=['name_norm'], keep='first')
 
 # merge basics and ratings on tconst
