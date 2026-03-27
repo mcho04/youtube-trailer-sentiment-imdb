@@ -1,15 +1,23 @@
 # Imports
+import os
 import pymongo
 from pymongo import MongoClient
 import pandas as pd
+from dotenv import load_dotenv
 
 # Setting Up the Connection & Connecting to the database
 
-CWL = '' # replace w CWL
-SNUM = '' # replace w student #
+# Load environment variables
+load_dotenv()
 
-if CWL.strip() == "" or CWL == 'Put your CWL here' or SNUM.strip() == "" or SNUM == 'Put your SNUM here':
-    print("You need up to update the value of the CWL and/or SNUM variables before proceeding.")
+# Setting Up the Connection & Connecting to the database
+CWL = os.getenv("CWL")
+SNUM = os.getenv("SNUM")
+
+if CWL is None or SNUM is None:
+    print("CWL or SNUM not found in .env file.")
+elif CWL.strip() == "" or SNUM.strip() == "":
+    print("CWL or SNUM is empty in .env file.")
 elif SNUM[0] == "a":
     print("You don't need to include the a here. Just include your student number as a string such as \"12345678\".")
 else:
@@ -22,9 +30,9 @@ else:
 # Transform Data for Document Structure
 
 # import cleaned data (from phase 3)
-basics_df = pd.read_csv("../data/cleaned/basics_cleaned.csv")
-ratings_df = pd.read_csv("../data/cleaned/ratings_cleaned.csv")
-trailers_df = pd.read_csv("../data/cleaned/movie_sentiments_cleaned.csv")
+basics_df = pd.read_csv("data/cleaned/basics_cleaned.csv")
+ratings_df = pd.read_csv("data/cleaned/ratings_cleaned.csv")
+trailers_df = pd.read_csv("data/cleaned/movie_sentiments_cleaned.csv")
 
 # remove duplicates temporarily (since movie_sentiments_cleaned still contains duplicates)
 # this should be removed in the later because our data should not contain duplicates
@@ -73,4 +81,4 @@ db.movies_collection.delete_many({})
 db.movies_collection.insert_many(movie_docs)
 
 # double check # of docs in collection (should match # of rows in merged dataset)
-db.movies_collection.count_documents({})
+print(db.movies_collection.count_documents({}))
