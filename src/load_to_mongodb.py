@@ -40,9 +40,13 @@ if __name__ == "__main__":
     # merge basics and ratings on tconst
     movies_df = basics_df.merge(ratings_df, on='tconst', how='inner')
 
-# remove duplicate movie titles to match schema design 
-# duplicate movie titles in sentiment data are pulled from the same youtube video, hence only first occurrence kept
-trailers_df = trailers_df.drop_duplicates(subset=['name_norm'], keep='first')
+    # merge movies_df and trailer sentiment on normalized movie title
+    movies_df_2 = movies_df.merge(
+        trailers_df,
+        left_on='primaryTitle_norm',
+        right_on='name_norm',
+        how='inner'
+    )
 
     # convert merged dataframe into list of nested dictionaries 
     # each row becomes a dictionary corresponding to a movie document
