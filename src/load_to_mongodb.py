@@ -26,59 +26,58 @@ else:
     db = client[CWL]["movies_db"]
     movies_collection = db["movies"]
 
+if __name__ == "__main__":
+    # Transform Data for Document Structure
+    # import cleaned data (from phase 3)
+    basics_df = pd.read_csv("data/cleaned/basics_cleaned.csv")
+    ratings_df = pd.read_csv("data/cleaned/ratings_cleaned.csv")
+    trailers_df = pd.read_csv("data/cleaned/movie_sentiments_cleaned.csv")
 
-# Transform Data for Document Structure
+    # remove duplicates temporarily (since movie_sentiments_cleaned still contains duplicates)
+    # this should be removed in the later because our data should not contain duplicates
+    trailers_df = trailers_df.drop_duplicates(subset=['name_norm'], keep='first')
 
-# import cleaned data (from phase 3)
-basics_df = pd.read_csv("data/cleaned/basics_cleaned.csv")
-ratings_df = pd.read_csv("data/cleaned/ratings_cleaned.csv")
-trailers_df = pd.read_csv("data/cleaned/movie_sentiments_cleaned.csv")
+    # merge basics and ratings on tconst
+    movies_df = basics_df.merge(ratings_df, on='tconst', how='inner')
 
-# remove duplicates temporarily (since movie_sentiments_cleaned still contains duplicates)
-# this should be removed in the later because our data should not contain duplicates
-trailers_df = trailers_df.drop_duplicates(subset=['name_norm'], keep='first')
+    # merge movies_df and trailer sentiment on normalized movie title
+    movies_df_2 = movies_df.merge(
+        trailers_df,
+        left_on='primaryTitle_norm',
+        right_on='name_norm',
+        how='inner'
+    )
 
-# merge basics and ratings on tconst
-movies_df = basics_df.merge(ratings_df, on='tconst', how='inner')
+    # convert merged dataframe into list of nested dictionaries 
+    # each row becomes a dictionary corresponding to a movie document
+    movie_docs = movies_df_2.apply(
+        lambda row: {
+            "_id": row['tconst'],
+            "primaryTitle_norm": row['primaryTitle_norm'],
+            "primaryTitle": row['primaryTitle'],
+            "startYear": int(row['startYear']),
+            "ratings": {
+                "averageRating": float(row['averageRating']),
+                "numVotes": int(row['numVotes'])
+            },
+            "trailer": {
+                "trailer_id": int(row['trailer_id']),
+                "favorability": float(row['favorability']),
+                "rating": row['rating'],
+                "genre": row['genre'],
+                "year": int(row['year'])
+            }
+        }, axis=1
+    ).tolist()
 
-# merge movies_df and trailer sentiment on normalized movie title
-movies_df_2 = movies_df.merge(
-    trailers_df,
-    left_on='primaryTitle_norm',
-    right_on='name_norm',
-    how='inner'
-)
+    # Populating the Database
 
-# convert merged dataframe into list of nested dictionaries 
-# each row becomes a dictionary corresponding to a movie document
-movie_docs = movies_df_2.apply(
-    lambda row: {
-        "_id": row['tconst'],
-        "primaryTitle_norm": row['primaryTitle_norm'],
-        "primaryTitle": row['primaryTitle'],
-        "startYear": int(row['startYear']),
-        "ratings": {
-            "averageRating": float(row['averageRating']),
-            "numVotes": int(row['numVotes'])
-        },
-        "trailer": {
-            "trailer_id": int(row['trailer_id']),
-            "favorability": float(row['favorability']),
-            "rating": row['rating'],
-            "genre": row['genre'],
-            "year": int(row['year'])
-        }
-    }, axis=1
-).tolist()
+    # this is just in case you have an existing database with same name
+    # we want to clear out that database before inserting data into it
+    db.movies_collection.delete_many({})
 
-# Populating the Database
+    # insert list of movie documents into collection
+    db.movies_collection.insert_many(movie_docs)
 
-# this is just in case you have an existing database with same name
-# we want to clear out that database before inserting data into it
-db.movies_collection.delete_many({})
-
-# insert list of movie documents into collection
-db.movies_collection.insert_many(movie_docs)
-
-# double check # of docs in collection (should match # of rows in merged dataset)
-print(db.movies_collection.count_documents({}))
+    # double check # of docs in collection (should match # of rows in merged dataset)
+    print(db.movies_collection.count_documents({}))
