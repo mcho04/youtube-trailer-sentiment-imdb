@@ -1,15 +1,23 @@
 # Imports
+import os
 import pymongo
 from pymongo import MongoClient
 import pandas as pd
+from dotenv import load_dotenv
 
 # Setting Up the Connection & Connecting to the database
 
-CWL = '' # replace w CWL
-SNUM = '' # replace w student #
+# Load environment variables
+load_dotenv()
 
-if CWL.strip() == "" or CWL == 'Put your CWL here' or SNUM.strip() == "" or SNUM == 'Put your SNUM here':
-    print("You need up to update the value of the CWL and/or SNUM variables before proceeding.")
+# Setting Up the Connection & Connecting to the database
+CWL = os.getenv("CWL")
+SNUM = os.getenv("SNUM")
+
+if CWL is None or SNUM is None:
+    print("CWL or SNUM not found in .env file.")
+elif CWL.strip() == "" or SNUM.strip() == "":
+    print("CWL or SNUM is empty in .env file.")
 elif SNUM[0] == "a":
     print("You don't need to include the a here. Just include your student number as a string such as \"12345678\".")
 else:
