@@ -30,9 +30,9 @@ else:
 # Transform Data for Document Structure
 
 # import cleaned data (from phase 3)
-basics_df = pd.read_csv("../data/cleaned/basics_cleaned.csv")
-ratings_df = pd.read_csv("../data/cleaned/ratings_cleaned.csv")
-trailers_df = pd.read_csv("../data/cleaned/movie_sentiments_cleaned.csv")
+basics_df = pd.read_csv("data/cleaned/basics_cleaned.csv")
+ratings_df = pd.read_csv("data/cleaned/ratings_cleaned.csv")
+trailers_df = pd.read_csv("data/cleaned/movie_sentiments_cleaned.csv")
 
 # remove duplicates temporarily (since movie_sentiments_cleaned still contains duplicates)
 # this should be removed in the later because our data should not contain duplicates
@@ -81,4 +81,4 @@ db.movies_collection.delete_many({})
 db.movies_collection.insert_many(movie_docs)
 
 # double check # of docs in collection (should match # of rows in merged dataset)
-db.movies_collection.count_documents({})
+print(db.movies_collection.count_documents({}))
