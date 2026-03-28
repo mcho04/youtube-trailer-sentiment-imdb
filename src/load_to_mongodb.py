@@ -81,3 +81,4 @@ if __name__ == "__main__":
 
     # double check # of docs in collection (should match # of rows in merged dataset)
     print(db.movies_collection.count_documents({}))
+    print("Dataset successfully imported!")
